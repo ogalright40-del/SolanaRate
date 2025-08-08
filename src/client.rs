@@ -72,23 +72,27 @@ impl AmmClientManager {
                     match client.ping().await {
                         Ok(_) => {
                             println!("✓ Successfully connected to {} (service available)", program.name);
-                            clients.push(client);
                         }
                         Err(e) => {
-                            println!("✗ Service not available at {}: {}", program.name, e);
-                            simulation_mode = true;
+                            println!("⚠️ Ping failed for {} (continuing to subscribe): {}", program.name, e);
                         }
                     }
+                    // Push the client regardless of ping result to attempt real subscriptions
+                    clients.push(client);
                 }
                 Err(e) => {
                     println!("✗ Failed to connect to {}: {}", program.name, e);
-                    simulation_mode = true;
+                    // Keep trying other programs; enable simulation later only if none succeed
                 }
             }
         }
         
+        // Enable simulation only if no connections succeeded
+        simulation_mode = clients.is_empty();
         if simulation_mode {
-            println!("⚠️  Some connections failed, enabling simulation mode for demonstration");
+            println!("⚠️  All connections failed, enabling simulation mode for demonstration");
+        } else {
+            println!("Proceeding with real gRPC subscriptions ({} connection(s) established)", clients.len());
         }
         
         Ok(Self { clients, filter_config, simulation_mode })

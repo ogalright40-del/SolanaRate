@@ -80,7 +80,7 @@ pub fn get_amm_programs() -> Vec<AmmProgram> {
         AmmProgram {
             id: METEORA_DLMM.to_string(),
             name: "Meteora DLMM".to_string(),
-            endpoint: "http://86.105.224.13:10101".to_string(),
+            endpoint: "http://ams2.corvus-labs.io:10101".to_string(),
         },
         AmmProgram {
             id: RAYDIUM_CL.to_string(),
@@ -90,7 +90,7 @@ pub fn get_amm_programs() -> Vec<AmmProgram> {
         AmmProgram {
             id: WHIRLPOOLS.to_string(),
             name: "Whirlpools".to_string(),
-            endpoint: "http://86.105.224.13:10101".to_string(),
+            endpoint: "http://ams2.corvus-labs.io:10101".to_string(),
         },
     ]
 } 

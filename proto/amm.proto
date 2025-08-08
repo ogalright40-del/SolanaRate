@@ -1,0 +1,68 @@
+syntax = "proto3";
+
+package solana.amm;
+
+// AMM Program IDs
+message AmmProgram {
+  string pump_fun = 1;      // pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA
+  string meteora_dlmm = 2;  // LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo
+  string raydium_cl = 3;    // CAMMCzo5YL8w4VFF8KVHrK22GGUsp5VTaW7grrKgrWqK
+  string whirlpools = 4;    // whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc
+}
+
+// Token pair information
+message TokenPair {
+  string base_token = 1;
+  string quote_token = 2;
+  string base_mint = 3;
+  string quote_mint = 4;
+  double base_decimals = 5;
+  double quote_decimals = 6;
+}
+
+// Pool liquidity information
+message PoolLiquidity {
+  double base_liquidity = 1;
+  double quote_liquidity = 2;
+  double total_liquidity_usd = 3;
+  double volume_24h = 4;
+  double volume_1h = 5;
+}
+
+// Market rate calculation
+message MarketRate {
+  string program_id = 1;
+  string pool_address = 2;
+  TokenPair token_pair = 3;
+  double rate = 4;  // Quote / Base
+  double swap_fee = 5;
+  PoolLiquidity liquidity = 6;
+  int64 timestamp = 7;
+  string transaction_signature = 8;
+}
+
+// Real-time price update
+message PriceUpdate {
+  MarketRate market_rate = 1;
+  double price_change_24h = 2;
+  double price_change_1h = 3;
+  bool meets_liquidity_filter = 4;
+  bool meets_volume_filter = 5;
+}
+
+// Filter configuration
+message FilterConfig {
+  double min_liquidity_sol = 1;  // 10,000 SOL
+  double min_volume_sol = 2;     // 50 SOL
+  int64 volume_timeframe_ms = 3; // 1,000ms
+}
+
+// gRPC service for AMM data
+service AmmService {
+  rpc SubscribePriceUpdates (FilterConfig) returns (stream PriceUpdate);
+  rpc GetMarketRates (FilterConfig) returns (stream MarketRate);
+  rpc Ping (PingRequest) returns (PingResponse);
+}
+
+message PingRequest {}
+message PingResponse {} 

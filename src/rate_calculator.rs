@@ -17,7 +17,7 @@ impl RateCalculator {
     pub fn calculate_rate(&mut self, base_amount: f64, quote_amount: f64) -> f64 {
         let start_time = Instant::now();
         
-        // Rate = Quote / Base
+        // Rate = Quote / Base (USDC per SOL)
         let rate = if base_amount > 0.0 {
             quote_amount / base_amount
         } else {
